@@ -611,8 +611,8 @@ const adminReports = {
 
         try {
             // Find the original leave/izin record
-            const leaves = storage.get('leaves', []);
-            const izinList = storage.get('izin', []);
+            let leaves = storage.get('leaves', []);
+            let izinList = storage.get('izin', []);
 
             if (row.type.toLowerCase().includes('cuti') || row.type.toLowerCase().includes('annual')) {
                 const leaveRecord = leaves.find(l => 
@@ -642,8 +642,7 @@ const adminReports = {
             // Reload data from storage to ensure consistency
             await this.loadData();
             
-            // Update local data and re-render
-            row.status = 'approved';
+            // Re-render to update UI (buttons will disappear for non-pending)
             this.renderLeaveReports();
             toast.success('Pengajuan disetujui');
         } catch (error) {
@@ -657,8 +656,8 @@ const adminReports = {
         if (!row) return;
 
         try {
-            const leaves = storage.get('leaves', []);
-            const izinList = storage.get('izin', []);
+            let leaves = storage.get('leaves', []);
+            let izinList = storage.get('izin', []);
 
             if (row.type.toLowerCase().includes('cuti') || row.type.toLowerCase().includes('annual')) {
                 const leaveRecord = leaves.find(l => 
@@ -688,8 +687,7 @@ const adminReports = {
             // Reload data from storage to ensure consistency
             await this.loadData();
             
-            // Update local data and re-render
-            row.status = 'rejected';
+            // Re-render to update UI (buttons will disappear for non-pending)
             this.renderLeaveReports();
             toast.info('Pengajuan ditolak');
         } catch (error) {
