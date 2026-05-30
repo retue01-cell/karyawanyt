@@ -35,11 +35,11 @@
     --color-gray-900: #0F172A;
     
     /* Background Colors - Light Mode */
-    --bg-primary: var(--bg-primary);
-    --bg-secondary: var(--bg-secondary);
-    --bg-sidebar: var(--bg-secondary);
-    --bg-card: var(--bg-secondary);
-    --bg-input: var(--bg-secondary);
+    --bg-primary: #FFFFFF;
+    --bg-secondary: #F8FAFC;
+    --bg-sidebar: #F8FAFC;
+    --bg-card: #F8FAFC;
+    --bg-input: #FFFFFF;
     
     /* Text Colors - Light Mode */
     --text-primary: var(--color-gray-800);
@@ -248,7 +248,7 @@ img {
 
 /* App Container */
 #app-container {
-    color-scheme: light !important;
+    color-scheme: light dark;
 }
 
 .app-container {
