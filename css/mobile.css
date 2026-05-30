@@ -374,6 +374,17 @@
         font-size: var(--font-size-lg);
     }
     
+    .btn-logout-top span {
+        display: none;
+    }
+    
+    .btn-logout-top {
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        justify-content: center;
+    }
+    
     /* Mobile menu toggle button */
     .mobile-menu-toggle {
         display: flex !important;

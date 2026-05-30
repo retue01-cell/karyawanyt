@@ -485,6 +485,27 @@ img {
     color: var(--bg-secondary);
 }
 
+.btn-logout-top {
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    font-size: var(--font-size-sm);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.btn-logout-top:hover {
+    background: var(--color-danger);
+    color: var(--bg-secondary);
+    border-color: var(--color-danger);
+}
+
 /* Main Content */
 .main-content {
     flex: 1;

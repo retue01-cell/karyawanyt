@@ -144,24 +144,44 @@ const adminReports = {
         });
 
         this.leaveData = [
-            ...leaves.map(l => ({
-                name: l.typeLabel === 'Cuti Tahunan' ? 'Budi Santoso' : 'Citra Dewi',
-                department: l.typeLabel === 'Cuti Tahunan' ? 'HR' : 'Finance',
-                type: l.type === 'annual' ? 'Cuti' : l.type,
-                dates: l.startDate === l.endDate ? l.startDate : `${l.startDate} - ${l.endDate}`,
-                duration: l.duration,
-                reason: l.reason,
-                status: l.status
-            })),
-            ...izinList.map(i => ({
-                name: 'Dedi Pratama',
-                department: 'Marketing',
-                type: 'Izin',
-                dates: i.date,
-                duration: i.duration,
-                reason: i.reason,
-                status: i.status
-            }))
+            ...leaves.map(l => {
+                // Find employee by userId
+                let emp = employees.find(e => String(e.id) === String(l.userId));
+                if (!emp && currentUser) {
+                    emp = { name: currentUser.name, department: currentUser.department || '-' };
+                }
+                if (!emp) {
+                    emp = { name: 'Karyawan', department: '-' };
+                }
+                return {
+                    name: emp.name,
+                    department: emp.department,
+                    type: l.type === 'annual' ? 'Cuti' : l.type,
+                    dates: l.startDate === l.endDate ? l.startDate : `${l.startDate} - ${l.endDate}`,
+                    duration: l.duration,
+                    reason: l.reason,
+                    status: l.status
+                };
+            }),
+            ...izinList.map(i => {
+                // Find employee by userId for izin
+                let emp = employees.find(e => String(e.id) === String(i.userId));
+                if (!emp && currentUser) {
+                    emp = { name: currentUser.name, department: currentUser.department || '-' };
+                }
+                if (!emp) {
+                    emp = { name: 'Karyawan', department: '-' };
+                }
+                return {
+                    name: emp.name,
+                    department: emp.department,
+                    type: 'Izin',
+                    dates: i.date,
+                    duration: i.duration,
+                    reason: i.reason,
+                    status: i.status
+                };
+            })
         ];
     },
 

@@ -360,48 +360,65 @@ const absensi = {
     async processWithVerification(action, verificationData) {
         const now = new Date();
         const timeStr = dateTime.formatTime(now);
+        let success = false;
 
-        switch (action) {
-            case 'clock-in':
-                this.attendanceData.clockIn = timeStr;
-                this.attendanceData.status = 'ontime';
-                this.currentState = 'clocked-in';
-                toast.success(`Clock In berhasil: ${timeStr}`);
-                break;
-            case 'break':
-                this.attendanceData.breakStart = timeStr;
-                this.currentState = 'on-break';
-                toast.info(`Mulai istirahat: ${timeStr}`);
-                break;
-            case 'after-break':
-                this.attendanceData.breakEnd = timeStr;
-                this.currentState = 'clocked-in';
-                toast.success(`Selesai istirahat: ${timeStr}`);
-                break;
-            case 'overtime':
-                this.attendanceData.overtimeStart = timeStr;
-                toast.info(`Mulai lembur: ${timeStr}`);
-                break;
-            case 'clock-out':
-                this.attendanceData.clockOut = timeStr;
-                this.currentState = 'completed';
-                toast.success(`Clock Out berhasil: ${timeStr}`);
-                break;
+        try {
+            switch (action) {
+                case 'clock-in':
+                    this.attendanceData.clockIn = timeStr;
+                    this.attendanceData.status = 'ontime';
+                    this.currentState = 'clocked-in';
+                    toast.success(`Clock In berhasil: ${timeStr}`);
+                    success = true;
+                    break;
+                case 'break':
+                    this.attendanceData.breakStart = timeStr;
+                    this.currentState = 'on-break';
+                    toast.info(`Mulai istirahat: ${timeStr}`);
+                    success = true;
+                    break;
+                case 'after-break':
+                    this.attendanceData.breakEnd = timeStr;
+                    this.currentState = 'clocked-in';
+                    toast.success(`Selesai istirahat: ${timeStr}`);
+                    success = true;
+                    break;
+                case 'overtime':
+                    this.attendanceData.overtimeStart = timeStr;
+                    toast.info(`Mulai lembur: ${timeStr}`);
+                    success = true;
+                    break;
+                case 'clock-out':
+                    this.attendanceData.clockOut = timeStr;
+                    this.currentState = 'completed';
+                    toast.success(`Clock Out berhasil: ${timeStr}`);
+                    success = true;
+                    break;
+            }
+
+            // Save verification data
+            this.attendanceData.verification = {
+                timestamp: verificationData.timestamp,
+                location: verificationData.location,
+                photo: verificationData.photo
+            };
+
+            await this.saveAttendance();
+            this.updateUI();
+            this.renderTimeline();
+
+            // Clean up temp data
+            storage.remove('temp_attendance');
+
+            // Navigate to dashboard only on success
+            if (success) {
+                setTimeout(() => router.navigate('dashboard'), 1000);
+            }
+        } catch (error) {
+            console.error('Processing error:', error);
+            toast.error('Terjadi kesalahan saat memproses absensi.');
+            // Stay on absensi page on error
         }
-
-        // Save verification data
-        this.attendanceData.verification = {
-            timestamp: verificationData.timestamp,
-            location: verificationData.location,
-            photo: verificationData.photo
-        };
-
-        await this.saveAttendance();
-        this.updateUI();
-        this.renderTimeline();
-
-        // Clean up temp data
-        storage.remove('temp_attendance');
     },
 
     async saveAttendance() {

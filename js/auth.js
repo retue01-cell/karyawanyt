@@ -26,10 +26,14 @@ const auth = {
             togglePassword.addEventListener('click', () => this.togglePasswordVisibility());
         }
 
-        // Logout button
+        // Logout buttons (both sidebar and top bar)
         const logoutBtn = document.getElementById('btn-logout');
         if (logoutBtn) {
             logoutBtn.addEventListener('click', () => this.handleLogout());
+        }
+        const logoutTopBtn = document.getElementById('btn-logout-top');
+        if (logoutTopBtn) {
+            logoutTopBtn.addEventListener('click', () => this.handleLogout());
         }
 
         // Profile click - open profile modal
