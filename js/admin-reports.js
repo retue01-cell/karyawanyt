@@ -145,11 +145,8 @@ const adminReports = {
 
         this.leaveData = [
             ...leaves.map(l => {
-                // Find employee by userId
+                // Find employee by userId from the master employees list
                 let emp = employees.find(e => String(e.id) === String(l.userId));
-                if (!emp && currentUser) {
-                    emp = { name: currentUser.name, department: currentUser.department || '-' };
-                }
                 if (!emp) {
                     emp = { name: 'Karyawan', department: '-' };
                 }
@@ -164,11 +161,8 @@ const adminReports = {
                 };
             }),
             ...izinList.map(i => {
-                // Find employee by userId for izin
+                // Find employee by userId from the master employees list for izin
                 let emp = employees.find(e => String(e.id) === String(i.userId));
-                if (!emp && currentUser) {
-                    emp = { name: currentUser.name, department: currentUser.department || '-' };
-                }
                 if (!emp) {
                     emp = { name: 'Karyawan', department: '-' };
                 }
