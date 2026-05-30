@@ -7,7 +7,7 @@
  * - Jika API_BASE_URL diisi → semua request dikirim ke Google Apps Script
  */
 
-const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbxlT5Tej5NEdX4DdY8ugzGT1zMAga3j2Lb-QZicl6ArHsSgDqvl000gjESHsgS44KVJ/exec'; // Kosongkan untuk mode localStorage, isi dengan URL Web App GAS
+const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbwaCDkBuIqSjXeQceGijwZweqZJZfkuCboZJ9tR1HP4dyK4ER-hIXnf5OBpVpXyglOx9Q/exec'; // Kosongkan untuk mode localStorage, isi dengan URL Web App GAS
 
 const api = {
 
