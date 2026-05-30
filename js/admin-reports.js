@@ -440,7 +440,7 @@ const adminReports = {
             'rejected': 'Ditolak'
         };
 
-        tbody.innerHTML = data.map(row => `
+        tbody.innerHTML = data.map((row, index) => `
             <tr>
                 <td>${row.name}</td>
                 <td>${row.department}</td>
@@ -454,9 +454,18 @@ const adminReports = {
                     </span>
                 </td>
                 <td>
+                    ${row.status === 'pending' ? `
+                    <button class="btn-action approve" onclick="adminReports.approveLeave(${index})" title="Setujui">
+                        <i class="fas fa-check"></i>
+                    </button>
+                    <button class="btn-action reject" onclick="adminReports.rejectLeave(${index})" title="Tolak">
+                        <i class="fas fa-times"></i>
+                    </button>
+                    ` : `
                     <button class="btn-action view" onclick="adminReports.viewLeaveDetail('${row.name}')">
                         <i class="fas fa-eye"></i>
                     </button>
+                    `}
                 </td>
             </tr>
         `).join('');
@@ -592,6 +601,93 @@ const adminReports = {
 
     viewLeaveDetail(name) {
         toast.info(`Detail cuti/izin ${name}`);
+    },
+
+    async approveLeave(index) {
+        const row = this.leaveData[index];
+        if (!row) return;
+
+        try {
+            // Find the original leave/izin record
+            const leaves = storage.get('leaves', []);
+            const izinList = storage.get('izin', []);
+
+            if (row.type.toLowerCase().includes('cuti') || row.type.toLowerCase().includes('annual')) {
+                const leaveRecord = leaves.find(l => 
+                    l.userId && String(l.userId) === String(row.userId) && 
+                    l.reason === row.reason && 
+                    l.status === 'pending'
+                );
+                if (leaveRecord) {
+                    await api.approveLeave(leaveRecord.id);
+                    leaveRecord.status = 'approved';
+                    storage.set('leaves', leaves);
+                }
+            } else {
+                // Izin
+                const izinRecord = izinList.find(i => 
+                    i.userId && String(i.userId) === String(row.userId) && 
+                    i.reason === row.reason && 
+                    i.status === 'pending'
+                );
+                if (izinRecord) {
+                    await api.approveIzin(izinRecord.id);
+                    izinRecord.status = 'approved';
+                    storage.set('izin', izinList);
+                }
+            }
+
+            // Update local data and re-render
+            row.status = 'approved';
+            this.renderLeaveReports();
+            toast.success('Pengajuan disetujui');
+        } catch (error) {
+            console.error('Error approving leave:', error);
+            toast.error('Gagal menyetujui pengajuan');
+        }
+    },
+
+    async rejectLeave(index) {
+        const row = this.leaveData[index];
+        if (!row) return;
+
+        try {
+            const leaves = storage.get('leaves', []);
+            const izinList = storage.get('izin', []);
+
+            if (row.type.toLowerCase().includes('cuti') || row.type.toLowerCase().includes('annual')) {
+                const leaveRecord = leaves.find(l => 
+                    l.userId && String(l.userId) === String(row.userId) && 
+                    l.reason === row.reason && 
+                    l.status === 'pending'
+                );
+                if (leaveRecord) {
+                    await api.rejectLeave(leaveRecord.id);
+                    leaveRecord.status = 'rejected';
+                    storage.set('leaves', leaves);
+                }
+            } else {
+                // Izin
+                const izinRecord = izinList.find(i => 
+                    i.userId && String(i.userId) === String(row.userId) && 
+                    i.reason === row.reason && 
+                    i.status === 'pending'
+                );
+                if (izinRecord) {
+                    await api.rejectIzin(izinRecord.id);
+                    izinRecord.status = 'rejected';
+                    storage.set('izin', izinList);
+                }
+            }
+
+            // Update local data and re-render
+            row.status = 'rejected';
+            this.renderLeaveReports();
+            toast.info('Pengajuan ditolak');
+        } catch (error) {
+            console.error('Error rejecting leave:', error);
+            toast.error('Gagal menolak pengajuan');
+        }
     }
 };
 
