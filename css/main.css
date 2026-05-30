@@ -3,7 +3,7 @@
    Modern CSS with CSS Variables
    ============================================ */
 
-/* CSS Variables */
+/* CSS Variables - Light Mode (Default) */
 :root {
     /* Primary Colors - Yellow/Gold theme based on screenshot */
     --color-primary: #F59E0B;
@@ -34,24 +34,27 @@
     --color-gray-800: #1E293B;
     --color-gray-900: #0F172A;
     
-    /* Background Colors */
-    --bg-primary: var(--color-gray-50);
-    --bg-secondary: var(--color-white);
-    --bg-sidebar: var(--color-white);
+    /* Background Colors - Light Mode */
+    --bg-primary: var(--bg-primary);
+    --bg-secondary: var(--bg-secondary);
+    --bg-sidebar: var(--bg-secondary);
+    --bg-card: var(--bg-secondary);
+    --bg-input: var(--bg-secondary);
     
-    /* Text Colors */
+    /* Text Colors - Light Mode */
     --text-primary: var(--color-gray-800);
     --text-secondary: var(--color-gray-500);
     --text-muted: var(--color-gray-400);
+    --text-inverse: var(--bg-secondary);
     
-    /* Border */
+    /* Border - Light Mode */
     --border-color: var(--color-gray-200);
     --border-radius-sm: 6px;
     --border-radius: 10px;
     --border-radius-lg: 16px;
     --border-radius-xl: 24px;
     
-    /* Shadows */
+    /* Shadows - Light Mode */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -85,22 +88,37 @@
     --sidebar-collapsed: 70px;
 }
 
-/* Force Light Mode - Disable Dark Mode */
-html {
-    color-scheme: light !important;
+/* Dark Mode Variables */
+[data-theme="dark"] {
+    /* Background Colors - Dark Mode */
+    --bg-primary: #0F172A;
+    --bg-secondary: #1E293B;
+    --bg-sidebar: #1E293B;
+    --bg-card: #1E293B;
+    --bg-input: #334155;
+    
+    /* Text Colors - Dark Mode */
+    --text-primary: #F1F5F9;
+    --text-secondary: #94A3B8;
+    --text-muted: #64748B;
+    --text-inverse: #0F172A;
+    
+    /* Border - Dark Mode */
+    --border-color: #334155;
+    
+    /* Shadows - Dark Mode (softer) */
+    --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+    --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+    --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.2);
+    
+    /* Override specific components for dark mode */
+    --color-primary-gradient: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        /* Override dark mode - keep light mode colors */
-        --bg-primary: #F8FAFC !important;
-        --bg-secondary: #FFFFFF !important;
-        --bg-sidebar: #FFFFFF !important;
-        --text-primary: #1E293B !important;
-        --text-secondary: #64748B !important;
-        --text-muted: #94A3B8 !important;
-        --border-color: #E2E8F0 !important;
-    }
+/* Allow both light and dark color schemes */
+html {
+    color-scheme: light dark;
 }
 
 /* Reset & Base */
@@ -138,7 +156,7 @@ button {
 input, textarea, select {
     font-family: inherit;
     font-size: inherit;
-    background-color: var(--color-white) !important;
+    background-color: var(--bg-secondary) !important;
     color: var(--text-primary) !important;
     border-color: var(--border-color) !important;
 }
@@ -303,7 +321,7 @@ img {
 }
 
 .sidebar-toggle:hover {
-    background: var(--color-gray-100);
+    background: var(--bg-primary);
     color: var(--color-primary);
 }
 
@@ -371,7 +389,7 @@ img {
 }
 
 .nav-link:hover {
-    background: var(--color-gray-100);
+    background: var(--bg-primary);
     color: var(--text-primary);
 }
 
@@ -464,7 +482,7 @@ img {
 
 .btn-logout:hover {
     background: var(--color-danger);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 /* Main Content */
@@ -520,14 +538,14 @@ img {
     align-items: center;
     justify-content: center;
     color: var(--text-secondary);
-    background: var(--color-gray-100);
+    background: var(--bg-primary);
     position: relative;
     transition: all var(--transition-fast);
 }
 
 .btn-icon:hover {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .btn-icon .badge {
@@ -537,7 +555,7 @@ img {
     width: 18px;
     height: 18px;
     background: var(--color-danger);
-    color: var(--color-white);
+    color: var(--bg-secondary);
     font-size: 10px;
     font-weight: 600;
     border-radius: 50%;
@@ -598,7 +616,7 @@ img {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: var(--color-white);
+    color: var(--bg-secondary);
     box-shadow: var(--shadow-lg);
 }
 
@@ -669,9 +687,14 @@ img {
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius-sm);
     font-size: var(--font-size-sm);
-    background: var(--color-white);
+    background: var(--bg-input);
     color: var(--text-secondary);
     cursor: pointer;
+}
+
+/* Dark mode toggle button styles */
+.btn-theme-toggle.active i::before {
+    content: '\f185'; /* fa-sun icon */
 }
 
 .view-all {
@@ -706,7 +729,7 @@ img {
 
 .donut-bg {
     fill: none;
-    stroke: var(--color-gray-200);
+    stroke: var(--border-color);
     stroke-width: 12;
 }
 
@@ -870,12 +893,12 @@ img {
     gap: var(--spacing-sm);
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
     transition: all var(--transition-fast);
 }
 
 .quick-btn:hover {
-    background: var(--color-white);
+    background: var(--bg-secondary);
     box-shadow: var(--shadow);
     transform: translateY(-2px);
 }
@@ -888,7 +911,7 @@ img {
     align-items: center;
     justify-content: center;
     font-size: var(--font-size-lg);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .quick-icon.clock-in { background: var(--color-success); }
@@ -963,7 +986,7 @@ img {
     align-items: center;
     justify-content: center;
     font-size: var(--font-size);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .activity-icon.clock-in { background: var(--color-success); }
@@ -1000,7 +1023,7 @@ img {
     width: 40px;
     height: 40px;
     border-radius: 50%;
-    border: 3px solid var(--color-white);
+    border: 3px solid var(--bg-secondary);
     margin-left: -12px;
     transition: transform var(--transition-fast);
 }
@@ -1026,7 +1049,7 @@ img {
     font-size: var(--font-size-xs);
     font-weight: 600;
     margin-left: -12px;
-    border: 3px solid var(--color-white);
+    border: 3px solid var(--bg-secondary);
 }
 
 .presence-stats {
@@ -1064,7 +1087,7 @@ img {
     gap: var(--spacing-sm);
     padding: var(--spacing) var(--spacing-md);
     background: var(--color-primary-gradient);
-    color: var(--color-white);
+    color: var(--bg-secondary);
     border-radius: var(--border-radius);
     font-weight: 500;
     transition: all var(--transition-fast);
@@ -1086,7 +1109,7 @@ img {
     justify-content: center;
     gap: var(--spacing-sm);
     padding: var(--spacing) var(--spacing-md);
-    background: var(--color-gray-100);
+    background: var(--bg-primary);
     color: var(--text-secondary);
     border-radius: var(--border-radius);
     font-weight: 500;
@@ -1123,7 +1146,7 @@ img {
     padding: var(--spacing);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
-    background: var(--color-white);
+    background: var(--bg-secondary);
     transition: all var(--transition-fast);
 }
 
@@ -1163,7 +1186,7 @@ img {
 }
 
 .toast {
-    background: var(--color-white);
+    background: var(--bg-secondary);
     border-radius: var(--border-radius);
     padding: var(--spacing-md);
     display: flex;
@@ -1304,7 +1327,7 @@ img {
         bottom: 0;
         left: 0;
         right: 0;
-        background: var(--color-white);
+        background: var(--bg-secondary);
         border-top: 1px solid var(--border-color);
         display: flex;
         justify-content: space-around;
@@ -1387,7 +1410,7 @@ img {
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-gray-100);
+    background: var(--bg-primary);
 }
 
 ::-webkit-scrollbar-thumb {

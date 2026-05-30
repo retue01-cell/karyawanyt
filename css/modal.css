@@ -57,7 +57,7 @@
 
 .btn-close-modal:hover {
     background: var(--color-danger);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .modal-form {
@@ -70,7 +70,7 @@
     padding: var(--spacing);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
-    background: var(--color-white);
+    background: var(--bg-secondary);
     font-size: var(--font-size);
 }
 

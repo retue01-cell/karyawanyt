@@ -50,7 +50,7 @@
 
 .btn-date-nav:hover {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .current-date-display {
@@ -139,7 +139,7 @@
     align-items: center;
     gap: var(--spacing);
     padding: var(--spacing);
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
     border-radius: var(--border-radius);
 }
 
@@ -227,7 +227,7 @@
 }
 
 .jurnal-item:hover {
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
     border-radius: var(--border-radius);
 }
 
@@ -247,7 +247,7 @@
     height: 50px;
     background: var(--color-primary-gradient);
     border-radius: var(--border-radius);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .date-day {
@@ -316,7 +316,7 @@
 
 .btn-icon-sm:hover {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 /* Responsive */

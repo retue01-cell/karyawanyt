@@ -55,7 +55,7 @@
     align-items: center;
     gap: var(--spacing);
     padding: var(--spacing);
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
     border-radius: var(--border-radius);
     margin-bottom: var(--spacing);
 }
@@ -102,7 +102,7 @@
 
 .btn-delete-shift:hover {
     background: var(--color-danger);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 /* Working Days */
@@ -120,7 +120,7 @@
     cursor: pointer;
     padding: var(--spacing);
     border-radius: var(--border-radius);
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
     transition: all var(--transition-fast);
 }
 

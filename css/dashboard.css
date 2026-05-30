@@ -90,7 +90,7 @@
 }
 
 .activity-item:hover {
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
 }
 
 /* Team Avatars Animation */

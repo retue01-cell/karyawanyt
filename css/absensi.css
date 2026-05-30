@@ -122,22 +122,22 @@
 
 .status-ring.waiting .status-icon {
     background: var(--color-primary-gradient);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .status-ring.active .status-icon {
     background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .status-ring.on-break .status-icon {
     background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .status-ring.completed .status-icon {
     background: linear-gradient(135deg, #64748B 0%, #94A3B8 100%);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .status-text {
@@ -164,7 +164,7 @@
     align-items: center;
     gap: var(--spacing);
     padding: var(--spacing-md);
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
     border: 2px solid transparent;
     border-radius: var(--border-radius);
     transition: all var(--transition-fast);
@@ -172,7 +172,7 @@
 }
 
 .attendance-btn:hover:not(:disabled) {
-    background: var(--color-white);
+    background: var(--bg-secondary);
     border-color: var(--color-primary);
     box-shadow: var(--shadow);
     transform: translateY(-2px);
@@ -201,7 +201,7 @@
     align-items: center;
     justify-content: center;
     font-size: var(--font-size-lg);
-    color: var(--color-white);
+    color: var(--bg-secondary);
     flex-shrink: 0;
 }
 
@@ -269,7 +269,7 @@
     height: 24px;
     border-radius: 50%;
     border: 2px solid var(--border-color);
-    background: var(--color-white);
+    background: var(--bg-secondary);
     flex-shrink: 0;
     position: relative;
     z-index: 1;
@@ -287,7 +287,7 @@
 }
 
 .timeline-item.pending .timeline-dot {
-    background: var(--color-white);
+    background: var(--bg-secondary);
     border-color: var(--border-color);
 }
 
@@ -335,7 +335,7 @@
 }
 
 .history-table th {
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -349,7 +349,7 @@
 }
 
 .history-table tbody tr:hover {
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
 }
 
 .history-table tbody tr:last-child {

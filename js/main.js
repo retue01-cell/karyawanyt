@@ -391,3 +391,65 @@ window.formUtils = formUtils;
 window.animations = animations;
 window.updateCompanyUI = updateCompanyUI;
 window.onDOMReady = onDOMReady;
+
+// Dark Mode Toggle
+const darkMode = {
+    init() {
+        // Load saved theme preference
+        const savedTheme = storage.get('theme', 'light');
+        this.setTheme(savedTheme);
+        
+        // Setup toggle button
+        const toggleBtn = document.getElementById('btn-theme-toggle');
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => this.toggle());
+        }
+    },
+    
+    toggle() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        this.setTheme(newTheme);
+        storage.set('theme', newTheme);
+    },
+    
+    setTheme(theme) {
+        const html = document.documentElement;
+        const toggleBtn = document.getElementById('btn-theme-toggle');
+        const icon = toggleBtn ? toggleBtn.querySelector('i') : null;
+        
+        if (theme === 'dark') {
+            html.setAttribute('data-theme', 'dark');
+            if (icon) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+            if (toggleBtn) toggleBtn.classList.add('active');
+        } else {
+            html.removeAttribute('data-theme');
+            if (icon) {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+            if (toggleBtn) toggleBtn.classList.remove('active');
+        }
+        
+        // Update meta theme-color for mobile browsers
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', theme === 'dark' ? '#0F172A' : '#ffffff');
+        }
+    },
+    
+    getTheme() {
+        return document.documentElement.getAttribute('data-theme') || 'light';
+    }
+};
+
+// Initialize dark mode on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+    darkMode.init();
+});
+
+// Export dark mode
+window.darkMode = darkMode;

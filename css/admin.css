@@ -57,7 +57,7 @@
     align-items: center;
     justify-content: center;
     font-size: var(--font-size-xl);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .stat-icon.employees { background: linear-gradient(135deg, #3B82F6 0%, #60A5FA 100%); }
@@ -293,7 +293,7 @@
     padding: var(--spacing);
     border: 1px solid var(--border-color);
     border-radius: var(--border-radius);
-    background: var(--color-white);
+    background: var(--bg-secondary);
     font-size: var(--font-size);
 }
 
@@ -333,7 +333,7 @@
 
 .employees-table th,
 .reports-table th {
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
     font-weight: 600;
     color: var(--text-secondary);
     text-transform: uppercase;
@@ -349,7 +349,7 @@
 
 .employees-table tbody tr:hover,
 .reports-table tbody tr:hover {
-    background: var(--color-gray-50);
+    background: var(--bg-primary);
 }
 
 .employee-info {
@@ -424,7 +424,7 @@
 
 .btn-action:hover {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .btn-action.view:hover {
@@ -473,12 +473,12 @@
 
 .btn-page:hover:not(:disabled) {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .btn-page.active {
     background: var(--color-primary);
-    color: var(--color-white);
+    color: var(--bg-secondary);
 }
 
 .btn-page:disabled {
