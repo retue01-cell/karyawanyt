@@ -273,6 +273,9 @@ const izin = {
                 'emergency': 'fa-exclamation-triangle'
             };
 
+            const currentUser = auth.getCurrentUser();
+            const canDelete = izin.status === 'pending' && String(izin.userId) === String(currentUser?.id);
+
             return `
                 <div class="izin-item">
                     <div class="izin-icon ${izin.type}">
@@ -295,6 +298,11 @@ const izin = {
                                 <i class="fas fa-paperclip"></i>
                                 Lampiran tersedia
                             </span>
+                        ` : ''}
+                        ${canDelete ? `
+                            <button class="btn-delete-izin" onclick="izin.deleteIzin(${izin.id})" title="Hapus pengajuan">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         ` : ''}
                     </div>
                 </div>
@@ -339,6 +347,24 @@ const izin = {
             toast.info('Pengajuan izin ditolak');
         } catch (error) {
             console.error('Error rejecting izin:', error);
+        }
+    },
+
+    async deleteIzin(id) {
+        const currentUser = auth.getCurrentUser();
+        if (!currentUser) return;
+
+        if (!confirm('Apakah Anda yakin ingin menghapus pengajuan izin ini?')) return;
+
+        try {
+            await api.deleteIzin(id);
+            this.izinData = this.izinData.filter(i => i.id !== id);
+            this.renderIzinList();
+            this.updateStats();
+            toast.success('Pengajuan izin dihapus');
+        } catch (error) {
+            console.error('Error deleting izin:', error);
+            toast.error('Gagal menghapus pengajuan izin');
         }
     }
 };

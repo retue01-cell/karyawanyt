@@ -226,6 +226,16 @@ const api = {
         return this.request('rejectIzin', { id });
     },
 
+    async deleteIzin(id) {
+        if (!API_BASE_URL) {
+            const all = storage.get('izin', []);
+            const filtered = all.filter(i => i.id !== id);
+            storage.set('izin', filtered);
+            return { success: true };
+        }
+        return this.request('deleteIzin', { id });
+    },
+
     async getAllIzin() {
         if (!API_BASE_URL) {
             return { success: true, data: storage.get('izin', []) };

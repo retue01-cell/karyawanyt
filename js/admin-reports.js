@@ -639,6 +639,9 @@ const adminReports = {
                 }
             }
 
+            // Reload data from storage to ensure consistency
+            await this.loadData();
+            
             // Update local data and re-render
             row.status = 'approved';
             this.renderLeaveReports();
@@ -682,6 +685,9 @@ const adminReports = {
                 }
             }
 
+            // Reload data from storage to ensure consistency
+            await this.loadData();
+            
             // Update local data and re-render
             row.status = 'rejected';
             this.renderLeaveReports();

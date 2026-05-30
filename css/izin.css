@@ -308,6 +308,32 @@
     color: var(--text-secondary);
 }
 
+.btn-delete-izin {
+    position: absolute;
+    top: var(--spacing-sm);
+    right: var(--spacing-sm);
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: var(--color-danger-light);
+    color: var(--color-danger);
+    border-radius: var(--border-radius-sm);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.btn-delete-izin:hover {
+    background: var(--color-danger);
+    color: white;
+}
+
+.izin-item {
+    position: relative;
+}
+
 /* Responsive */
 @media (max-width: 992px) {
     .izin-grid {
