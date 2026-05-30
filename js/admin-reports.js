@@ -157,7 +157,8 @@ const adminReports = {
                     dates: l.startDate === l.endDate ? l.startDate : `${l.startDate} - ${l.endDate}`,
                     duration: l.duration,
                     reason: l.reason,
-                    status: l.status
+                    status: l.status,
+                    userId: l.userId
                 };
             }),
             ...izinList.map(i => {
@@ -173,7 +174,8 @@ const adminReports = {
                     dates: i.date,
                     duration: i.duration,
                     reason: i.reason,
-                    status: i.status
+                    status: i.status,
+                    userId: i.userId
                 };
             })
         ];

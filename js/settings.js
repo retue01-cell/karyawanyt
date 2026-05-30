@@ -64,6 +64,15 @@ const settings = {
                 const el = document.getElementById('setting-location-tracking');
                 if (el) el.checked = allSettings.location_tracking === 'true' || allSettings.location_tracking === true;
             }
+            // Load office coordinates
+            if (allSettings.office_latitude !== undefined) {
+                const el = document.getElementById('setting-latitude');
+                if (el) el.value = allSettings.office_latitude;
+            }
+            if (allSettings.office_longitude !== undefined) {
+                const el = document.getElementById('setting-longitude');
+                if (el) el.value = allSettings.office_longitude;
+            }
         } catch (error) {
             console.error('Error loading settings:', error);
             this.shifts = storage.get('shifts', []);
@@ -170,12 +179,16 @@ const settings = {
         const lateTolerance = document.getElementById('setting-late-tolerance');
         const faceRecognition = document.getElementById('setting-face-recognition');
         const locationTracking = document.getElementById('setting-location-tracking');
+        const latitude = document.getElementById('setting-latitude');
+        const longitude = document.getElementById('setting-longitude');
 
         try {
             await Promise.all([
                 api.saveSetting('late_tolerance', lateTolerance ? lateTolerance.value : '15'),
                 api.saveSetting('face_recognition', faceRecognition ? String(faceRecognition.checked) : 'true'),
-                api.saveSetting('location_tracking', locationTracking ? String(locationTracking.checked) : 'true')
+                api.saveSetting('location_tracking', locationTracking ? String(locationTracking.checked) : 'true'),
+                api.saveSetting('office_latitude', latitude ? latitude.value : '-6.200000'),
+                api.saveSetting('office_longitude', longitude ? longitude.value : '106.816666')
             ]);
             toast.success('Pengaturan sistem berhasil disimpan!');
         } catch (error) {

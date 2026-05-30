@@ -236,7 +236,7 @@
             <!-- Top Bar -->
             <header class="top-bar">
                 <div class="top-bar-left">
-                    <button class="mobile-menu-toggle" id="mobile-menu-toggle" style="display: none;">
+                    <button class="mobile-menu-toggle" id="mobile-menu-toggle">
                         <i class="fas fa-bars"></i>
                     </button>
                     <h1 class="page-title" id="page-title">Dashboard</h1>
@@ -1454,6 +1454,18 @@
                                         <div class="setting-control"><label class="toggle-switch"><input type="checkbox"
                                                     id="setting-location-tracking" checked><span
                                                     class="toggle-slider"></span></label></div>
+                                    </div>
+                                    <div class="setting-item">
+                                        <div class="setting-info">
+                                            <span class="setting-name">Koordinat Lokasi Kantor</span>
+                                            <span class="setting-desc">Latitude dan longitude lokasi kantor untuk absensi</span>
+                                        </div>
+                                        <div class="setting-control">
+                                            <div style="display: flex; gap: 8px;">
+                                                <input type="text" id="setting-latitude" placeholder="Latitude" value="-6.200000" style="width: 100px;">
+                                                <input type="text" id="setting-longitude" placeholder="Longitude" value="106.816666" style="width: 100px;">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="form-actions" style="margin-top: var(--spacing-md);"><button type="button"

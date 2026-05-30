@@ -687,6 +687,34 @@
     .current-time .date {
         display: none;
     }
+    
+    /* Theme toggle button on mobile */
+    .btn-theme-toggle {
+        display: flex !important;
+        width: 40px;
+        height: 40px;
+        align-items: center;
+        justify-content: center;
+        background: var(--bg-input);
+        border-radius: var(--border-radius);
+        margin-right: var(--spacing-sm);
+    }
+    
+    /* Logout button top bar on mobile - icon only */
+    .btn-logout-top {
+        display: flex !important;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        justify-content: center;
+        align-items: center;
+        background: var(--bg-input);
+        border-radius: var(--border-radius);
+    }
+    
+    .btn-logout-top span {
+        display: none;
+    }
 }
 
 @media (max-width: 576px) {

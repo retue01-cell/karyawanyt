@@ -714,6 +714,25 @@ img {
 }
 
 /* Dark mode toggle button styles */
+.btn-theme-toggle {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-secondary);
+    background: var(--bg-primary);
+    position: relative;
+    transition: all var(--transition-fast);
+    cursor: pointer;
+}
+
+.btn-theme-toggle:hover {
+    background: var(--color-primary);
+    color: var(--bg-secondary);
+}
+
 .btn-theme-toggle.active i::before {
     content: '\f185'; /* fa-sun icon */
 }
