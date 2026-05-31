@@ -160,7 +160,7 @@ const api = {
     async approveLeave(id) {
         if (!API_BASE_URL) {
             const all = storage.get('leaves', []);
-            const leave = all.find(l => l.id === id);
+            const leave = all.find(l => String(l.id) === String(id));
             if (leave) { leave.status = 'approved'; storage.set('leaves', all); }
             return { success: true, data: leave };
         }
@@ -170,7 +170,7 @@ const api = {
     async rejectLeave(id) {
         if (!API_BASE_URL) {
             const all = storage.get('leaves', []);
-            const leave = all.find(l => l.id === id);
+            const leave = all.find(l => String(l.id) === String(id));
             if (leave) { leave.status = 'rejected'; storage.set('leaves', all); }
             return { success: true, data: leave };
         }
@@ -209,7 +209,7 @@ const api = {
     async approveIzin(id) {
         if (!API_BASE_URL) {
             const all = storage.get('izin', []);
-            const item = all.find(i => i.id === id);
+            const item = all.find(i => String(i.id) === String(id));
             if (item) { item.status = 'approved'; storage.set('izin', all); }
             return { success: true, data: item };
         }
@@ -219,7 +219,7 @@ const api = {
     async rejectIzin(id) {
         if (!API_BASE_URL) {
             const all = storage.get('izin', []);
-            const item = all.find(i => i.id === id);
+            const item = all.find(i => String(i.id) === String(id));
             if (item) { item.status = 'rejected'; storage.set('izin', all); }
             return { success: true, data: item };
         }

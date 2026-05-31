@@ -144,24 +144,34 @@ const adminReports = {
         });
 
         this.leaveData = [
-            ...leaves.map(l => ({
-                name: l.typeLabel === 'Cuti Tahunan' ? 'Budi Santoso' : 'Citra Dewi',
-                department: l.typeLabel === 'Cuti Tahunan' ? 'HR' : 'Finance',
-                type: l.type === 'annual' ? 'Cuti' : l.type,
-                dates: l.startDate === l.endDate ? l.startDate : `${l.startDate} - ${l.endDate}`,
-                duration: l.duration,
-                reason: l.reason,
-                status: l.status
-            })),
-            ...izinList.map(i => ({
-                name: 'Dedi Pratama',
-                department: 'Marketing',
-                type: 'Izin',
-                dates: i.date,
-                duration: i.duration,
-                reason: i.reason,
-                status: i.status
-            }))
+            ...leaves.map(l => {
+                const emp = employees.find(e => String(e.id) === String(l.userId)) || { name: 'Karyawan', department: '-' };
+                return {
+                    id: l.id,
+                    sourceType: 'leave',
+                    name: emp.name,
+                    department: emp.department,
+                    type: l.typeLabel || l.type,
+                    dates: l.startDate === l.endDate ? l.startDate : `${l.startDate} - ${l.endDate}`,
+                    duration: l.duration,
+                    reason: l.reason,
+                    status: l.status
+                };
+            }),
+            ...izinList.map(i => {
+                const emp = employees.find(e => String(e.id) === String(i.userId)) || { name: 'Karyawan', department: '-' };
+                return {
+                    id: i.id,
+                    sourceType: 'izin',
+                    name: emp.name,
+                    department: emp.department,
+                    type: i.typeLabel || i.type,
+                    dates: i.date,
+                    duration: i.duration,
+                    reason: i.reason,
+                    status: i.status
+                };
+            })
         ];
     },
 
@@ -440,9 +450,19 @@ const adminReports = {
                     </span>
                 </td>
                 <td>
-                    <button class="btn-action view" onclick="adminReports.viewLeaveDetail('${row.name}')">
-                        <i class="fas fa-eye"></i>
-                    </button>
+                    <div style="display: flex; gap: 5px;">
+                        <button class="btn-action view" onclick="adminReports.viewLeaveDetail('${row.name}')" title="Lihat">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        ${row.status === 'pending' ? `
+                            <button class="btn-action edit" onclick="adminReports.approveRequest('${row.id}', '${row.sourceType}')" title="Terima" style="background-color: var(--color-success);">
+                                <i class="fas fa-check"></i>
+                            </button>
+                            <button class="btn-action delete" onclick="adminReports.rejectRequest('${row.id}', '${row.sourceType}')" title="Tolak" style="background-color: var(--color-danger);">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        ` : ''}
+                    </div>
                 </td>
             </tr>
         `).join('');
@@ -578,6 +598,54 @@ const adminReports = {
 
     viewLeaveDetail(name) {
         toast.info(`Detail cuti/izin ${name}`);
+    },
+
+    async approveRequest(id, sourceType) {
+        if (!confirm('Apakah Anda yakin ingin menyetujui permintaan ini?')) return;
+
+        try {
+            let result;
+            if (sourceType === 'leave') {
+                result = await api.approveLeave(id);
+            } else {
+                result = await api.approveIzin(id);
+            }
+
+            if (result.success) {
+                toast.success('Permintaan berhasil disetujui');
+                await this.loadData();
+                this.renderLeaveReports();
+            } else {
+                toast.error(result.error || 'Gagal menyetujui permintaan');
+            }
+        } catch (error) {
+            console.error('Error approving request:', error);
+            toast.error('Terjadi kesalahan');
+        }
+    },
+
+    async rejectRequest(id, sourceType) {
+        if (!confirm('Apakah Anda yakin ingin menolak permintaan ini?')) return;
+
+        try {
+            let result;
+            if (sourceType === 'leave') {
+                result = await api.rejectLeave(id);
+            } else {
+                result = await api.rejectIzin(id);
+            }
+
+            if (result.success) {
+                toast.info('Permintaan telah ditolak');
+                await this.loadData();
+                this.renderLeaveReports();
+            } else {
+                toast.error(result.error || 'Gagal menolak permintaan');
+            }
+        } catch (error) {
+            console.error('Error rejecting request:', error);
+            toast.error('Terjadi kesalahan');
+        }
     }
 };
 
