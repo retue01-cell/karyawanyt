@@ -613,17 +613,22 @@ const adminReports = {
             let leaves = storage.get('leaves', []);
             let found = false;
             
-            // Cari di data izin terlebih dahulu
+            // Cari di data izin terlebih dahulu berdasarkan userId dan tanggal
             for (let i = 0; i < izinList.length; i++) {
                 const iz = izinList[i];
-                if (String(iz.userId) === String(userId) && 
-                    iz.type.toLowerCase().includes('izin') &&
-                    (iz.date === dates || (dates.includes(' - ') && iz.date === dates.split(' - ')[0]))) {
-                    izinList[i].status = 'approved';
-                    storage.set('izin', izinList);
-                    await api.approveIzin(iz.id);
-                    found = true;
-                    break;
+                // Cocokkan userId dan tanggal (dates bisa single date atau range)
+                if (String(iz.userId) === String(userId)) {
+                    const matchDate = iz.date === dates || 
+                                     (dates.includes(' - ') && iz.date === dates.split(' - ')[0]) ||
+                                     (dates.includes(' - ') && iz.date === dates.split(' - ')[1]);
+                    
+                    if (matchDate && iz.status === 'pending') {
+                        izinList[i].status = 'approved';
+                        storage.set('izin', izinList);
+                        await api.approveIzin(iz.id);
+                        found = true;
+                        break;
+                    }
                 }
             }
             
@@ -632,7 +637,8 @@ const adminReports = {
                 for (let i = 0; i < leaves.length; i++) {
                     const l = leaves[i];
                     if (String(l.userId) === String(userId) && 
-                        l.startDate === dates) {
+                        l.startDate === dates &&
+                        l.status === 'pending') {
                         leaves[i].status = 'approved';
                         storage.set('leaves', leaves);
                         await api.approveLeave(l.id);
@@ -667,17 +673,22 @@ const adminReports = {
             let leaves = storage.get('leaves', []);
             let found = false;
             
-            // Cari di data izin terlebih dahulu
+            // Cari di data izin terlebih dahulu berdasarkan userId dan tanggal
             for (let i = 0; i < izinList.length; i++) {
                 const iz = izinList[i];
-                if (String(iz.userId) === String(userId) && 
-                    iz.type.toLowerCase().includes('izin') &&
-                    (iz.date === dates || (dates.includes(' - ') && iz.date === dates.split(' - ')[0]))) {
-                    izinList[i].status = 'rejected';
-                    storage.set('izin', izinList);
-                    await api.rejectIzin(iz.id);
-                    found = true;
-                    break;
+                // Cocokkan userId dan tanggal (dates bisa single date atau range)
+                if (String(iz.userId) === String(userId)) {
+                    const matchDate = iz.date === dates || 
+                                     (dates.includes(' - ') && iz.date === dates.split(' - ')[0]) ||
+                                     (dates.includes(' - ') && iz.date === dates.split(' - ')[1]);
+                    
+                    if (matchDate && iz.status === 'pending') {
+                        izinList[i].status = 'rejected';
+                        storage.set('izin', izinList);
+                        await api.rejectIzin(iz.id);
+                        found = true;
+                        break;
+                    }
                 }
             }
             
@@ -686,7 +697,8 @@ const adminReports = {
                 for (let i = 0; i < leaves.length; i++) {
                     const l = leaves[i];
                     if (String(l.userId) === String(userId) && 
-                        l.startDate === dates) {
+                        l.startDate === dates &&
+                        l.status === 'pending') {
                         leaves[i].status = 'rejected';
                         storage.set('leaves', leaves);
                         await api.rejectLeave(l.id);
