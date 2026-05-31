@@ -610,40 +610,51 @@ const adminReports = {
         if (!row) return;
 
         try {
-            // Find the original leave/izin record
-            const leaves = storage.get('leaves', []);
-            const izinList = storage.get('izin', []);
+            // Find the original leave/izin record by userId and date/reason
+            let leaves = storage.get('leaves', []);
+            let izinList = storage.get('izin', []);
 
-            if (row.type.toLowerCase().includes('cuti') || row.type.toLowerCase().includes('annual')) {
-                const leaveRecord = leaves.find(l => 
-                    l.userId && String(l.userId) === String(row.userId) && 
-                    l.reason === row.reason && 
-                    l.status === 'pending'
-                );
-                if (leaveRecord) {
-                    await api.approveLeave(leaveRecord.id);
-                    leaveRecord.status = 'approved';
-                    storage.set('leaves', leaves);
+            let found = false;
+            
+            if (row.type.toLowerCase().includes('cuti') || row.type.toLowerCase().includes('annual') || row.type.toLowerCase().includes('sakit') || row.type.toLowerCase().includes('important')) {
+                // Find leave record
+                for (let i = 0; i < leaves.length; i++) {
+                    const l = leaves[i];
+                    if (String(l.userId) === String(row.userId) && 
+                        l.reason === row.reason && 
+                        l.status === 'pending') {
+                        leaves[i].status = 'approved';
+                        storage.set('leaves', leaves);
+                        await api.approveLeave(l.id);
+                        found = true;
+                        break;
+                    }
                 }
             } else {
                 // Izin
-                const izinRecord = izinList.find(i => 
-                    i.userId && String(i.userId) === String(row.userId) && 
-                    i.reason === row.reason && 
-                    i.status === 'pending'
-                );
-                if (izinRecord) {
-                    await api.approveIzin(izinRecord.id);
-                    izinRecord.status = 'approved';
-                    storage.set('izin', izinList);
+                for (let i = 0; i < izinList.length; i++) {
+                    const iz = izinList[i];
+                    if (String(iz.userId) === String(row.userId) && 
+                        iz.reason === row.reason && 
+                        iz.status === 'pending') {
+                        izinList[i].status = 'approved';
+                        storage.set('izin', izinList);
+                        await api.approveIzin(iz.id);
+                        found = true;
+                        break;
+                    }
                 }
+            }
+
+            if (!found) {
+                toast.warning('Pengajuan tidak ditemukan atau sudah diproses');
+                return;
             }
 
             // Reload data from storage to ensure consistency
             await this.loadData();
             
-            // Update local data and re-render
-            row.status = 'approved';
+            // Re-render to update UI (buttons will disappear for non-pending)
             this.renderLeaveReports();
             toast.success('Pengajuan disetujui');
         } catch (error) {
@@ -657,39 +668,50 @@ const adminReports = {
         if (!row) return;
 
         try {
-            const leaves = storage.get('leaves', []);
-            const izinList = storage.get('izin', []);
+            let leaves = storage.get('leaves', []);
+            let izinList = storage.get('izin', []);
 
-            if (row.type.toLowerCase().includes('cuti') || row.type.toLowerCase().includes('annual')) {
-                const leaveRecord = leaves.find(l => 
-                    l.userId && String(l.userId) === String(row.userId) && 
-                    l.reason === row.reason && 
-                    l.status === 'pending'
-                );
-                if (leaveRecord) {
-                    await api.rejectLeave(leaveRecord.id);
-                    leaveRecord.status = 'rejected';
-                    storage.set('leaves', leaves);
+            let found = false;
+            
+            if (row.type.toLowerCase().includes('cuti') || row.type.toLowerCase().includes('annual') || row.type.toLowerCase().includes('sakit') || row.type.toLowerCase().includes('important')) {
+                // Find leave record
+                for (let i = 0; i < leaves.length; i++) {
+                    const l = leaves[i];
+                    if (String(l.userId) === String(row.userId) && 
+                        l.reason === row.reason && 
+                        l.status === 'pending') {
+                        leaves[i].status = 'rejected';
+                        storage.set('leaves', leaves);
+                        await api.rejectLeave(l.id);
+                        found = true;
+                        break;
+                    }
                 }
             } else {
                 // Izin
-                const izinRecord = izinList.find(i => 
-                    i.userId && String(i.userId) === String(row.userId) && 
-                    i.reason === row.reason && 
-                    i.status === 'pending'
-                );
-                if (izinRecord) {
-                    await api.rejectIzin(izinRecord.id);
-                    izinRecord.status = 'rejected';
-                    storage.set('izin', izinList);
+                for (let i = 0; i < izinList.length; i++) {
+                    const iz = izinList[i];
+                    if (String(iz.userId) === String(row.userId) && 
+                        iz.reason === row.reason && 
+                        iz.status === 'pending') {
+                        izinList[i].status = 'rejected';
+                        storage.set('izin', izinList);
+                        await api.rejectIzin(iz.id);
+                        found = true;
+                        break;
+                    }
                 }
+            }
+
+            if (!found) {
+                toast.warning('Pengajuan tidak ditemukan atau sudah diproses');
+                return;
             }
 
             // Reload data from storage to ensure consistency
             await this.loadData();
             
-            // Update local data and re-render
-            row.status = 'rejected';
+            // Re-render to update UI (buttons will disappear for non-pending)
             this.renderLeaveReports();
             toast.info('Pengajuan ditolak');
         } catch (error) {
