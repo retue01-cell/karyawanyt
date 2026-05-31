@@ -606,27 +606,44 @@ const adminReports = {
     },
 
     async approveLeave(userId, type, dates) {
-        if (!userId) return;
+        if (!userId) {
+            console.error('approveLeave: userId is missing');
+            return;
+        }
+
+        console.log('approveLeave called with:', { userId, type, dates });
 
         try {
             let izinList = storage.get('izin', []);
             let leaves = storage.get('leaves', []);
             let found = false;
             
+            console.log('Current izin list:', izinList);
+            console.log('Current leaves list:', leaves);
+            
             // Cari di data izin terlebih dahulu berdasarkan userId dan tanggal
             for (let i = 0; i < izinList.length; i++) {
                 const iz = izinList[i];
+                console.log('Checking izin:', iz);
                 // Cocokkan userId dan tanggal (dates bisa single date atau range)
                 if (String(iz.userId) === String(userId)) {
                     const matchDate = iz.date === dates || 
                                      (dates.includes(' - ') && iz.date === dates.split(' - ')[0]) ||
                                      (dates.includes(' - ') && iz.date === dates.split(' - ')[1]);
                     
+                    console.log('matchDate:', matchDate, 'status:', iz.status);
+                    
                     if (matchDate && iz.status === 'pending') {
+                        console.log('Found matching izin, updating status to approved');
                         izinList[i].status = 'approved';
                         storage.set('izin', izinList);
+                        console.log('Updated izin list saved to storage');
                         // Update juga di API jika tersedia
-                        try { await api.approveIzin(iz.id); } catch(e) {}
+                        try { 
+                            await api.approveIzin(iz.id); 
+                        } catch(e) {
+                            console.log('API update skipped for izin');
+                        }
                         found = true;
                         break;
                     }
@@ -637,13 +654,20 @@ const adminReports = {
             if (!found) {
                 for (let i = 0; i < leaves.length; i++) {
                     const l = leaves[i];
+                    console.log('Checking leave:', l);
                     if (String(l.userId) === String(userId) && 
                         (l.startDate === dates || l.endDate === dates) &&
                         l.status === 'pending') {
+                        console.log('Found matching leave, updating status to approved');
                         leaves[i].status = 'approved';
                         storage.set('leaves', leaves);
+                        console.log('Updated leaves list saved to storage');
                         // Update juga di API jika tersedia
-                        try { await api.approveLeave(l.id); } catch(e) {}
+                        try { 
+                            await api.approveLeave(l.id); 
+                        } catch(e) {
+                            console.log('API update skipped for leave');
+                        }
                         found = true;
                         break;
                     }
@@ -651,14 +675,17 @@ const adminReports = {
             }
 
             if (!found) {
+                console.warn('No matching pending request found');
                 toast.warning('Pengajuan tidak ditemukan atau sudah diproses');
                 return;
             }
 
             // Reload data dari storage untuk memastikan konsistensi
+            console.log('Reloading data...');
             await this.loadData();
             
             // Re-render untuk update UI (tombol akan hilang untuk non-pending)
+            console.log('Re-rendering leave reports...');
             this.renderLeaveReports();
             toast.success('Pengajuan disetujui');
         } catch (error) {
@@ -668,27 +695,44 @@ const adminReports = {
     },
 
     async rejectLeave(userId, type, dates) {
-        if (!userId) return;
+        if (!userId) {
+            console.error('rejectLeave: userId is missing');
+            return;
+        }
+
+        console.log('rejectLeave called with:', { userId, type, dates });
 
         try {
             let izinList = storage.get('izin', []);
             let leaves = storage.get('leaves', []);
             let found = false;
             
+            console.log('Current izin list:', izinList);
+            console.log('Current leaves list:', leaves);
+            
             // Cari di data izin terlebih dahulu berdasarkan userId dan tanggal
             for (let i = 0; i < izinList.length; i++) {
                 const iz = izinList[i];
+                console.log('Checking izin:', iz);
                 // Cocokkan userId dan tanggal (dates bisa single date atau range)
                 if (String(iz.userId) === String(userId)) {
                     const matchDate = iz.date === dates || 
                                      (dates.includes(' - ') && iz.date === dates.split(' - ')[0]) ||
                                      (dates.includes(' - ') && iz.date === dates.split(' - ')[1]);
                     
+                    console.log('matchDate:', matchDate, 'status:', iz.status);
+                    
                     if (matchDate && iz.status === 'pending') {
+                        console.log('Found matching izin, updating status to rejected');
                         izinList[i].status = 'rejected';
                         storage.set('izin', izinList);
+                        console.log('Updated izin list saved to storage');
                         // Update juga di API jika tersedia
-                        try { await api.rejectIzin(iz.id); } catch(e) {}
+                        try { 
+                            await api.rejectIzin(iz.id); 
+                        } catch(e) {
+                            console.log('API update skipped for izin');
+                        }
                         found = true;
                         break;
                     }
@@ -699,13 +743,20 @@ const adminReports = {
             if (!found) {
                 for (let i = 0; i < leaves.length; i++) {
                     const l = leaves[i];
+                    console.log('Checking leave:', l);
                     if (String(l.userId) === String(userId) && 
                         (l.startDate === dates || l.endDate === dates) &&
                         l.status === 'pending') {
+                        console.log('Found matching leave, updating status to rejected');
                         leaves[i].status = 'rejected';
                         storage.set('leaves', leaves);
+                        console.log('Updated leaves list saved to storage');
                         // Update juga di API jika tersedia
-                        try { await api.rejectLeave(l.id); } catch(e) {}
+                        try { 
+                            await api.rejectLeave(l.id); 
+                        } catch(e) {
+                            console.log('API update skipped for leave');
+                        }
                         found = true;
                         break;
                     }
@@ -713,14 +764,17 @@ const adminReports = {
             }
 
             if (!found) {
+                console.warn('No matching pending request found');
                 toast.warning('Pengajuan tidak ditemukan atau sudah diproses');
                 return;
             }
 
             // Reload data dari storage untuk memastikan konsistensi
+            console.log('Reloading data...');
             await this.loadData();
             
             // Re-render untuk update UI (tombol akan hilang untuk non-pending)
+            console.log('Re-rendering leave reports...');
             this.renderLeaveReports();
             toast.info('Pengajuan ditolak');
         } catch (error) {
