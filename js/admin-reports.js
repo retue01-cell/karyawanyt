@@ -457,10 +457,10 @@ const adminReports = {
                 </td>
                 <td>
                     ${row.status === 'pending' ? `
-                    <button class="btn-action approve" onclick="adminReports.approveLeave(${index})" title="Setujui">
+                    <button class="btn-action approve" onclick="adminReports.approveLeave('${row.userId}', '${row.type}', '${row.dates}')" title="Setujui">
                         <i class="fas fa-check"></i>
                     </button>
-                    <button class="btn-action reject" onclick="adminReports.rejectLeave(${index})" title="Tolak">
+                    <button class="btn-action reject" onclick="adminReports.rejectLeave('${row.userId}', '${row.type}', '${row.dates}')" title="Tolak">
                         <i class="fas fa-times"></i>
                     </button>
                     ` : `
