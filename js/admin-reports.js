@@ -605,41 +605,37 @@ const adminReports = {
         toast.info(`Detail cuti/izin ${name}`);
     },
 
-    async approveLeave(index) {
-        const row = this.leaveData[index];
-        if (!row) return;
+    async approveLeave(userId, type, dates) {
+        if (!userId) return;
 
         try {
-            // Find the original leave/izin record by userId and date/reason
-            let leaves = storage.get('leaves', []);
             let izinList = storage.get('izin', []);
-
+            let leaves = storage.get('leaves', []);
             let found = false;
             
-            if (row.type.toLowerCase().includes('cuti') || row.type.toLowerCase().includes('annual') || row.type.toLowerCase().includes('sakit') || row.type.toLowerCase().includes('important')) {
-                // Find leave record
+            // Cari di data izin terlebih dahulu
+            for (let i = 0; i < izinList.length; i++) {
+                const iz = izinList[i];
+                if (String(iz.userId) === String(userId) && 
+                    iz.type.toLowerCase().includes('izin') &&
+                    (iz.date === dates || (dates.includes(' - ') && iz.date === dates.split(' - ')[0]))) {
+                    izinList[i].status = 'approved';
+                    storage.set('izin', izinList);
+                    await api.approveIzin(iz.id);
+                    found = true;
+                    break;
+                }
+            }
+            
+            // Jika tidak ditemukan di izin, cari di leaves
+            if (!found) {
                 for (let i = 0; i < leaves.length; i++) {
                     const l = leaves[i];
-                    if (String(l.userId) === String(row.userId) && 
-                        l.reason === row.reason && 
-                        l.status === 'pending') {
+                    if (String(l.userId) === String(userId) && 
+                        l.startDate === dates) {
                         leaves[i].status = 'approved';
                         storage.set('leaves', leaves);
                         await api.approveLeave(l.id);
-                        found = true;
-                        break;
-                    }
-                }
-            } else {
-                // Izin
-                for (let i = 0; i < izinList.length; i++) {
-                    const iz = izinList[i];
-                    if (String(iz.userId) === String(row.userId) && 
-                        iz.reason === row.reason && 
-                        iz.status === 'pending') {
-                        izinList[i].status = 'approved';
-                        storage.set('izin', izinList);
-                        await api.approveIzin(iz.id);
                         found = true;
                         break;
                     }
@@ -651,10 +647,10 @@ const adminReports = {
                 return;
             }
 
-            // Reload data from storage to ensure consistency
+            // Reload data dari storage untuk memastikan konsistensi
             await this.loadData();
             
-            // Re-render to update UI (buttons will disappear for non-pending)
+            // Re-render untuk update UI (tombol akan hilang untuk non-pending)
             this.renderLeaveReports();
             toast.success('Pengajuan disetujui');
         } catch (error) {
@@ -663,40 +659,37 @@ const adminReports = {
         }
     },
 
-    async rejectLeave(index) {
-        const row = this.leaveData[index];
-        if (!row) return;
+    async rejectLeave(userId, type, dates) {
+        if (!userId) return;
 
         try {
-            let leaves = storage.get('leaves', []);
             let izinList = storage.get('izin', []);
-
+            let leaves = storage.get('leaves', []);
             let found = false;
             
-            if (row.type.toLowerCase().includes('cuti') || row.type.toLowerCase().includes('annual') || row.type.toLowerCase().includes('sakit') || row.type.toLowerCase().includes('important')) {
-                // Find leave record
+            // Cari di data izin terlebih dahulu
+            for (let i = 0; i < izinList.length; i++) {
+                const iz = izinList[i];
+                if (String(iz.userId) === String(userId) && 
+                    iz.type.toLowerCase().includes('izin') &&
+                    (iz.date === dates || (dates.includes(' - ') && iz.date === dates.split(' - ')[0]))) {
+                    izinList[i].status = 'rejected';
+                    storage.set('izin', izinList);
+                    await api.rejectIzin(iz.id);
+                    found = true;
+                    break;
+                }
+            }
+            
+            // Jika tidak ditemukan di izin, cari di leaves
+            if (!found) {
                 for (let i = 0; i < leaves.length; i++) {
                     const l = leaves[i];
-                    if (String(l.userId) === String(row.userId) && 
-                        l.reason === row.reason && 
-                        l.status === 'pending') {
+                    if (String(l.userId) === String(userId) && 
+                        l.startDate === dates) {
                         leaves[i].status = 'rejected';
                         storage.set('leaves', leaves);
                         await api.rejectLeave(l.id);
-                        found = true;
-                        break;
-                    }
-                }
-            } else {
-                // Izin
-                for (let i = 0; i < izinList.length; i++) {
-                    const iz = izinList[i];
-                    if (String(iz.userId) === String(row.userId) && 
-                        iz.reason === row.reason && 
-                        iz.status === 'pending') {
-                        izinList[i].status = 'rejected';
-                        storage.set('izin', izinList);
-                        await api.rejectIzin(iz.id);
                         found = true;
                         break;
                     }
@@ -708,10 +701,10 @@ const adminReports = {
                 return;
             }
 
-            // Reload data from storage to ensure consistency
+            // Reload data dari storage untuk memastikan konsistensi
             await this.loadData();
             
-            // Re-render to update UI (buttons will disappear for non-pending)
+            // Re-render untuk update UI (tombol akan hilang untuk non-pending)
             this.renderLeaveReports();
             toast.info('Pengajuan ditolak');
         } catch (error) {
