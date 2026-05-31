@@ -625,7 +625,8 @@ const adminReports = {
                     if (matchDate && iz.status === 'pending') {
                         izinList[i].status = 'approved';
                         storage.set('izin', izinList);
-                        await api.approveIzin(iz.id);
+                        // Update juga di API jika tersedia
+                        try { await api.approveIzin(iz.id); } catch(e) {}
                         found = true;
                         break;
                     }
@@ -637,11 +638,12 @@ const adminReports = {
                 for (let i = 0; i < leaves.length; i++) {
                     const l = leaves[i];
                     if (String(l.userId) === String(userId) && 
-                        l.startDate === dates &&
+                        (l.startDate === dates || l.endDate === dates) &&
                         l.status === 'pending') {
                         leaves[i].status = 'approved';
                         storage.set('leaves', leaves);
-                        await api.approveLeave(l.id);
+                        // Update juga di API jika tersedia
+                        try { await api.approveLeave(l.id); } catch(e) {}
                         found = true;
                         break;
                     }
@@ -685,7 +687,8 @@ const adminReports = {
                     if (matchDate && iz.status === 'pending') {
                         izinList[i].status = 'rejected';
                         storage.set('izin', izinList);
-                        await api.rejectIzin(iz.id);
+                        // Update juga di API jika tersedia
+                        try { await api.rejectIzin(iz.id); } catch(e) {}
                         found = true;
                         break;
                     }
@@ -697,11 +700,12 @@ const adminReports = {
                 for (let i = 0; i < leaves.length; i++) {
                     const l = leaves[i];
                     if (String(l.userId) === String(userId) && 
-                        l.startDate === dates &&
+                        (l.startDate === dates || l.endDate === dates) &&
                         l.status === 'pending') {
                         leaves[i].status = 'rejected';
                         storage.set('leaves', leaves);
-                        await api.rejectLeave(l.id);
+                        // Update juga di API jika tersedia
+                        try { await api.rejectLeave(l.id); } catch(e) {}
                         found = true;
                         break;
                     }
